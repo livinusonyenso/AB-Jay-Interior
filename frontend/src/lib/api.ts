@@ -1,39 +1,36 @@
-import { LoginResponse, MeResponse } from "../types";
+import type { LoginResponse, MeResponse, ProjectFormData } from "../types"
 
 // ✅ Base URL for backend
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "http://localhost:5000/api"
 
 // Token management
 export const tokenStorage = {
   get: () => {
-    const token = localStorage.getItem("adminToken");
-    console.log("[v0] tokenStorage.get:", token);
-    return token;
+    const token = localStorage.getItem("adminToken")
+    console.log(" tokenStorage.get:", token)
+    return token
   },
   set: (token: string) => {
-    console.log("[v0] tokenStorage.set →", token);
-    localStorage.setItem("adminToken", token);
+    console.log(" tokenStorage.set →", token)
+    localStorage.setItem("adminToken", token)
   },
   remove: () => {
-    console.log("[v0] tokenStorage.remove");
-    localStorage.removeItem("adminToken");
+    console.log(" tokenStorage.remove")
+    localStorage.removeItem("adminToken")
   },
-};
+}
 
 // Generic request wrapper
-async function apiRequest<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
-  const token = tokenStorage.get();
+async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  const token = tokenStorage.get()
 
-  console.log("==============================");
-  console.log("[v0] API Request →", {
+  console.log("==============================")
+  console.log(" API Request →", {
     url: `${API_BASE_URL}${endpoint}`,
     options,
     token,
-  });
-  console.log("==============================");
+  })
+  console.log("==============================")
 
   const config: RequestInit = {
     ...options,
@@ -42,63 +39,131 @@ async function apiRequest<T>(
       ...(token && { Authorization: `Bearer ${token}` }),
       ...options.headers,
     },
-  };
+  }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-  console.log("[v0] API Response status:", response.status);
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, config)
+  console.log(" API Response status:", response.status)
 
   if (!response.ok) {
     if (response.status === 401) {
-      console.warn("[v0] 401 Unauthorized → clearing token & redirecting to /login");
-      tokenStorage.remove();
-      window.location.href = "/login";
+      console.warn(" 401 Unauthorized → clearing token & redirecting to /login")
+      tokenStorage.remove()
+      window.location.href = "/login"
     }
-    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+    throw new Error(`API Error: ${response.status} ${response.statusText}`)
   }
 
-  const json = await response.json();
-  console.log("[v0] API Response JSON:", json);
+  const json = await response.json()
+  console.log(" API Response JSON:", json)
 
-  return json;
+  return json
 }
 
 // Auth API
 export const authAPI = {
   login: async (email: string, password: string): Promise<LoginResponse> => {
-    console.log("[v0] authAPI.login →", { email, password });
+    console.log(" authAPI.login →", { email, password })
 
     return apiRequest<LoginResponse>("/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
-    });
+    })
   },
 
   me: async (): Promise<MeResponse> => {
-    console.log("[v0] authAPI.me");
-    return apiRequest<MeResponse>("/auth/me");
+    console.log(" authAPI.me")
+    return apiRequest<MeResponse>("/auth/me")
   },
-};
+}
 
 // Projects API
 export const projectsAPI = {
   getAll: async () => apiRequest<{ projects: any[] }>("/projects"),
-  getById: async (id: string) =>
-    apiRequest<{ project: any }>(`/projects/${id}`),
-  create: async (data: any) =>
-    apiRequest<{ project: any }>("/projects", {
+  getById: async (id: string) => apiRequest<{ project: any }>(`/projects/${id}`),
+
+  // ✅ Create project with FormData (supports multiple images)
+  create: async (data: ProjectFormData, files?: File[]) => {
+    console.log(" projectsAPI.create - Data:", data)
+    console.log(" projectsAPI.create - Files:", files?.length || 0)
+
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      console.log(` Appending ${key}:`, value)
+      // @ts-ignore
+      formData.append(key, value)
+    })
+    files?.forEach((file, index) => {
+      console.log(` Appending file ${index}:`, file.name, file.size)
+      formData.append("images", file)
+    })
+
+    const token = tokenStorage.get()
+    console.log(" Making request to:", `${API_BASE_URL}/projects`)
+
+    const res = await fetch(`${API_BASE_URL}/projects`, {
       method: "POST",
-      body: JSON.stringify(data),
-    }),
-  update: async (id: string, data: any) =>
-    apiRequest<{ project: any }>(`/projects/${id}`, {
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+        // DO NOT set Content-Type; browser sets automatically for FormData
+      },
+      body: formData,
+    })
+
+    console.log(" Response status:", res.status)
+
+    if (!res.ok) {
+      const errorText = await res.text()
+      console.error(" Error response:", errorText)
+      throw new Error(`API Error: ${res.status} ${res.statusText} - ${errorText}`)
+    }
+
+    const result = await res.json()
+    console.log(" Success response:", result)
+    return result
+  },
+
+  // ✅ Update project with FormData support
+  update: async (id: string, data: ProjectFormData, files?: File[]) => {
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      console.log(` Appending ${key}:`, value)
+      // @ts-ignore
+      formData.append(key, value)
+    })
+    files?.forEach((file, index) => {
+      console.log(` Appending file ${index}:`, file.name, file.size)
+      formData.append("images", file)
+    })
+
+    const token = tokenStorage.get()
+    console.log(" Making request to:", `${API_BASE_URL}/projects/${id}`)
+
+    const res = await fetch(`${API_BASE_URL}/projects/${id}`, {
       method: "PUT",
-      body: JSON.stringify(data),
-    }),
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      body: formData,
+    })
+
+    console.log(" Response status:", res.status)
+
+    if (!res.ok) {
+      const errorText = await res.text()
+      console.error(" Error response:", errorText)
+      throw new Error(`API Error: ${res.status} ${res.statusText} - ${errorText}`)
+    }
+
+    const result = await res.json()
+    console.log(" Success response:", result)
+    return result
+  },
+
   delete: async (id: string) =>
     apiRequest<void>(`/projects/${id}`, {
       method: "DELETE",
     }),
-};
+}
 
 // Form Submissions API
 export const submissionsAPI = {
@@ -107,21 +172,19 @@ export const submissionsAPI = {
     apiRequest<{ submission: any }>(`/submissions/${id}/review`, {
       method: "PATCH",
     }),
-};
+}
 
-
+// Quotes API
 export const quotesAPI = {
   submit: async (data: any) =>
     apiRequest<{ quote: any }>("/quotes", {
       method: "POST",
       body: JSON.stringify(data),
     }),
-  getAll: async () =>
-    apiRequest<{ quotes: any[] }>("/quotes"),
-  getById: async (id: string) =>
-    apiRequest<{ quote: any }>(`/quotes/${id}`),
+  getAll: async () => apiRequest<{ quotes: any[] }>("/quotes"),
+  getById: async (id: string) => apiRequest<{ quote: any }>(`/quotes/${id}`),
   delete: async (id: string) =>
     apiRequest<void>(`/quotes/${id}`, {
       method: "DELETE",
     }),
-};
+}

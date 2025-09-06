@@ -1,12 +1,14 @@
-"use client";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Project, ProjectFormData } from "../src/types";
-import { Input } from "./Input";
-import { Textarea } from "./Textarea";
-import { Button } from "./Button";
+"use client"
+import type React from "react"
+import { useState, useEffect } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import type { Project, ProjectFormData } from "../src/types"
+import { Input } from "./Input"
+import { Textarea } from "./Textarea"
+import { Button } from "./Button"
+import { useProjects } from "../hooks/useProjects"
 
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -14,232 +16,146 @@ const projectSchema = z.object({
   category: z.string().min(1, "Category is required"),
   location: z.string().min(1, "Location is required"),
   images: z
-    .array(z.string().url("Invalid URL"))
+    .array(z.any()) // allow both File and existing URL strings
     .min(1, "At least one image is required"),
-});
+})
 
 interface ProjectFormProps {
-  project?: Project | null;
-  onSubmit: (data: ProjectFormData) => Promise<void>;
-  onCancel: () => void;
-  isSubmitting: boolean;
+  project?: Project | null
+  onSuccess: (project: Project) => void
+  onCancel: () => void
+  isSubmitting?: boolean
 }
 
-const categories = [
-  "Residential",
-  "Commercial",
-  "Industrial",
-  "Educational",
-  "Healthcare",
-];
+const categories = ["Residential", "Commercial", "Industrial", "Educational", "Healthcare"]
+const locations = ["Lagos", "Abuja", "Port Harcourt", "New York", "London"]
 
-const locations = [
-  "Lagos",
-  "Abuja",
-  "Port Harcourt",
-  "New York",
-  "London",
-];
-
-export const ProjectForm: React.FC<ProjectFormProps> = ({
-  project,
-  onSubmit,
-  onCancel,
-  isSubmitting,
-}) => {
+export const ProjectForm: React.FC<ProjectFormProps> = ({ project, onSuccess, onCancel, isSubmitting = false }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
   } = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
-    defaultValues: project
-      ? {
-          title: project.title,
-          description: project.description,
-          category: project.category,
-          location: project.location,
-          images: project.images,
-        }
-      : {
-          title: "",
-          description: "",
-          category: "",
-          location: "",
-          images: [""],
-        },
-  });
+    defaultValues: {
+      title: project?.title || "",
+      description: project?.description || "",
+      category: project?.category || "",
+      location: project?.location || "",
+      images: project?.images || [],
+    },
+  })
 
-  const [localPreviews, setLocalPreviews] = useState<string[]>([]);
-  const images = watch("images");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [previews, setPreviews] = useState<string[]>(project?.images || [])
 
-  const addImageField = () => {
-    setValue("images", [...images, ""]);
-  };
+  const { createProject, updateProject } = useProjects()
 
-  const removeImageField = (index: number) => {
-    setValue("images", images.filter((_, i) => i !== index));
-    setLocalPreviews(localPreviews.filter((_, i) => i !== index));
-  };
+  // Sync form images with previews
+  useEffect(() => {
+    setValue("images", previews)
+  }, [previews, setValue])
 
-  const updateImageField = (index: number, value: string) => {
-    const newImages = [...images];
-    newImages[index] = value;
-    setValue("images", newImages);
-  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return
+    const files = Array.from(e.target.files)
+    setSelectedFiles((prev) => [...prev, ...files])
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
+    const newPreviews = files.map((file) => URL.createObjectURL(file))
+    setPreviews((prev) => [...prev, ...newPreviews])
+  }
 
-    const file = files[0];
-    if (!file.type.startsWith("image/")) {
-      alert("Only image files are allowed.");
-      return;
+  const removeImage = (index: number) => {
+    const fileIndex = index - (previews.length - selectedFiles.length)
+    if (fileIndex >= 0) {
+      // remove from selectedFiles
+      setSelectedFiles(selectedFiles.filter((_, i) => i !== fileIndex))
+    }
+    setPreviews(previews.filter((_, i) => i !== index))
+  }
+
+const onSubmitForm = async (data: ProjectFormData) => {
+  try {
+    // Only pass files for new uploads
+    const filesToUpload = selectedFiles.length > 0 ? selectedFiles : undefined
+
+    // ✅ Only include real image URLs if editing, not previews
+    const existingUrls = project ? project.images : []
+
+    const formData = {
+      title: data.title,
+      description: data.description,
+      category: data.category,
+      location: data.location,
+      images: existingUrls, // keep only backend-ready URLs
     }
 
-    const previewUrl = URL.createObjectURL(file);
+    const result = project
+      ? await updateProject(project.id, formData, filesToUpload)
+      : await createProject(formData, filesToUpload)
 
-    setValue("images", [...images, previewUrl]);
-    setLocalPreviews([...localPreviews, previewUrl]);
-  };
+    onSuccess(result.project)
+  } catch (err) {
+    console.error("Error submitting project:", err)
+    alert("Failed to submit project. Check console for details.")
+  }
+}
+
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      {/* Title */}
-      <Input
-        label="Project Title"
-        {...register("title")}
-        error={errors.title?.message}
-        placeholder="Enter project title"
-      />
+    <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
+      <Input label="Title" {...register("title")} error={errors.title?.message} />
+      <Textarea label="Description" {...register("description")} error={errors.description?.message} rows={4} />
 
-      {/* Description */}
-      <Textarea
-        label="Description"
-        {...register("description")}
-        error={errors.description?.message}
-        placeholder="Describe the project..."
-        rows={4}
-      />
-
-      {/* Category + Location */}
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Category
-          </label>
-          <select
-            {...register("category")}
-            defaultValue=""
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          >
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-          {errors.category && (
-            <p className="text-sm text-red-600">{errors.category.message}</p>
-          )}
-        </div>
+        <select {...register("category")} className="border rounded p-2">
+          <option value="">Select Category</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Location
-          </label>
-          <select
-            {...register("location")}
-            defaultValue=""
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          >
-            <option value="">Select Location</option>
-            {locations.map((loc) => (
-              <option key={loc} value={loc}>
-                {loc}
-              </option>
-            ))}
-          </select>
-          {errors.location && (
-            <p className="text-sm text-red-600">{errors.location.message}</p>
-          )}
-        </div>
+        <select {...register("location")} className="border rounded p-2">
+          <option value="">Select Location</option>
+          {locations.map((loc) => (
+            <option key={loc} value={loc}>
+              {loc}
+            </option>
+          ))}
+        </select>
       </div>
 
-      {/* Images */}
-      <div className="space-y-3">
-        <label className="block text-sm font-medium text-gray-700">
-          Project Images
-        </label>
-
-        {images.map((image, index) => (
-          <div key={index} className="flex items-center space-x-3">
-            <Input
-              value={image}
-              onChange={(e) => updateImageField(index, e.target.value)}
-              placeholder="https://example.com/image.jpg"
-              className="flex-1"
-            />
-            {image && (
-              <img
-                src={image}
-                alt="preview"
-                className="w-16 h-16 rounded object-cover border"
-              />
-            )}
-            {images.length > 1 && (
-              <Button
+      <div>
+        <label className="block mb-2">Images</label>
+        <input type="file" multiple accept="image/*" onChange={handleFileChange} />
+        <div className="flex space-x-2 mt-2 flex-wrap">
+          {previews.map((url, idx) => (
+            <div key={idx} className="relative">
+              <img src={url || "/placeholder.svg"} alt="preview" className="w-20 h-20 object-cover rounded border" />
+              <button
                 type="button"
-                variant="secondary"
-                onClick={() => removeImageField(index)}
+                onClick={() => removeImage(idx)}
+                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
               >
-                Remove
-              </Button>
-            )}
-          </div>
-        ))}
-
-        <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={addImageField}
-            size="sm"
-          >
-            Add Image URL
-          </Button>
-
-          <label className="cursor-pointer bg-gray-100 border border-gray-300 px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-200">
-            Upload Image
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileUpload}
-              className="hidden"
-            />
-          </label>
+                ×
+              </button>
+            </div>
+          ))}
         </div>
-
-        {errors.images && (
-          <p className="text-sm text-red-600">
-            At least one valid image is required
-          </p>
-        )}
+        {errors.images && <p className="text-red-600">{errors.images.message}</p>}
       </div>
 
-      {/* Actions */}
-      <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+      <div className="flex justify-end space-x-2">
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancel
         </Button>
         <Button type="submit" loading={isSubmitting}>
-          {project ? "Update Project" : "Create Project"}
+          {project ? "Update" : "Create"}
         </Button>
       </div>
     </form>
-  );
-};
+  )
+}

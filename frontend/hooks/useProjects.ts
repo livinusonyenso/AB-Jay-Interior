@@ -1,64 +1,50 @@
-import { useState, useEffect } from 'react';
-import { Project } from '../src/types';
-import { projectsAPI } from '../src/lib/api';
+"use client"
+
+import { useState, useEffect } from "react"
+import type { Project, ProjectFormData } from "../src/types"
+import { projectsAPI } from "../src/lib/api"
+
 export const useProjects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const fetchProjects = async () => {
+    setLoading(true)
     try {
-      setLoading(true);
-      setError(null);
-      const response = await projectsAPI.getAll();
-      setProjects(response.projects);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch projects');
+      const res = await projectsAPI.getAll()
+      setProjects(res.projects)
+    } catch (err: any) {
+      console.error(err)
+      setError(err.message || "Failed to fetch projects")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
+  const createProject = async (data: ProjectFormData, files?: File[]) => {
+    console.log(" Creating project with data:", data)
+    console.log(" Files to upload:", files?.length || 0)
 
-  const createProject = async (data: any) => {
-    try {
-      const response = await projectsAPI.create(data);
-      setProjects(prev => [...prev, response.project]);
-      return response.project;
-    } catch (err) {
-      throw new Error(err instanceof Error ? err.message : 'Failed to create project');
-    }
-  };
+    const res = await projectsAPI.create(data, files)
+    setProjects((prev) => [res.project, ...prev])
+    return res
+  }
 
-  const updateProject = async (id: string, data: any) => {
-    try {
-      const response = await projectsAPI.update(id, data);
-      setProjects(prev => prev.map(p => p.id === id ? response.project : p));
-      return response.project;
-    } catch (err) {
-      throw new Error(err instanceof Error ? err.message : 'Failed to update project');
-    }
-  };
+  const updateProject = async (id: string, data: ProjectFormData, files?: File[]) => {
+    const res = await projectsAPI.update(id, data, files)
+    setProjects((prev) => prev.map((p) => (p.id === id ? res.project : p)))
+    return res
+  }
 
   const deleteProject = async (id: string) => {
-    try {
-      await projectsAPI.delete(id);
-      setProjects(prev => prev.filter(p => p.id !== id));
-    } catch (err) {
-      throw new Error(err instanceof Error ? err.message : 'Failed to delete project');
-    }
-  };
+    await projectsAPI.delete(id)
+    setProjects((prev) => prev.filter((p) => p.id !== id))
+  }
 
-  return {
-    projects,
-    loading,
-    error,
-    createProject,
-    updateProject,
-    deleteProject,
-    refetch: fetchProjects,
-  };
-};
+  useEffect(() => {
+    fetchProjects()
+  }, [])
+
+  return { projects, loading, error, fetchProjects, createProject, updateProject, deleteProject }
+}

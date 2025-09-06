@@ -1,0 +1,80 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 650px;
+        margin: 30px auto;
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        overflow: hidden;
+      }
+      .header {
+        background: #8B0000; /* wine red theme */
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+      }
+      .content {
+        padding: 25px;
+        color: #333;
+        line-height: 1.6;
+      }
+      .details strong {
+        color: #8B0000;
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        text-align: center;
+        color: #666;
+        padding: 15px;
+        border-top: 1px solid #eee;
+      }
+  body
+    .container
+      .header
+        h2 New Quote Request Received
+      .content
+        p A new quote request has been submitted with the following details:
+        .details
+          p
+            strong Name: 
+            | #{firstName} #{lastName}
+          p
+            strong Email: 
+            | #{email}
+          p
+            strong Phone: 
+            | #{phone}
+          p
+            strong Location: 
+            | #{location}
+          p
+            strong Project Type: 
+            | #{projectType}
+          p
+            strong Budget: 
+            | #{budget}
+          p
+            strong Timeline: 
+            | #{timeline}
+          p
+            strong Has Plans?: 
+            | #{hasPlans ? 'Yes' : 'No'}
+          p
+            strong Newsletter Subscription: 
+            | #{newsletter ? 'Yes' : 'No'}
+        h3(style="margin-top:20px; color:#8B0000;") Description
+        p #{description}
+      .footer
+        p This is an automated email from <strong>AB-Jay Interior</strong>.  
+        p © #{new Date().getFullYear()} AB-Jay Interior. All rights reserved.
