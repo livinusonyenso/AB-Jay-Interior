@@ -10,7 +10,7 @@ export async function getProjects(req: Request, res: Response, next: NextFunctio
     const limit = Number(req.query.limit) || 10
     const { category, location } = req.query
 
-    const filter: any = {}
+    const filter: Record<string, unknown> = {}
     if (category) filter.category = new RegExp(category as string, "i")
     if (location) filter.location = new RegExp(location as string, "i")
 
@@ -40,8 +40,10 @@ export async function getProject(req: Request, res: Response, next: NextFunction
   try {
     const { id } = req.params
     const project = await Project.findById(id)
-    //@ts-ignore
-    if (!project) return res.status(404).json({ error: "Project not found" })
+    if (!project) {
+      res.status(404).json({ error: "Project not found" })
+      return
+    }
 
     res.json({ project })
   } catch (error) {
@@ -50,66 +52,77 @@ export async function getProject(req: Request, res: Response, next: NextFunction
 }
 
 // ================== CREATE PROJECT ==================
-export async function createProject(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+function logWithTime(message: string, data?: any) {
+  const now = new Date().toISOString();
+  if (data !== undefined) {
+    console.log(`[${now}] ${message}`, data);
+  } else {
+    console.log(`[${now}] ${message}`);
+  }
+}
+
+export async function createProject(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   try {
-    console.log(" createProject - Request body:", req.body)
-    console.log(" createProject - Files received:", req.files ? req.files.length : 0)
+    logWithTime("📥 Incoming createProject request");
+    logWithTime("📝 Body:", req.body);
+    logWithTime(
+      "📎 Files:",
+      req.files ? (req.files as Express.Multer.File[]).map(f => f.originalname) : "none"
+    );
 
-    if (req.files && Array.isArray(req.files)) {
-      console.log(
-        " createProject - File details:",
-        req.files.map((f) => ({
-          name: f.originalname,
-          size: f.size,
-          mimetype: f.mimetype,
-          fieldname: f.fieldname,
-        })),
-      )
-    }
+    const { title, location, category, description } = req.body;
+    const files = req.files as Express.Multer.File[] | undefined;
 
-    const { title, location, category, description } = req.body
-
+    // --- Validation ---
     if (!title || !location || !category || !description) {
-      return res.status(400).json({
-        error: "Validation failed",
-        details: [
-          { field: "title", message: !title ? "Required" : "Valid" },
-          { field: "location", message: !location ? "Required" : "Valid" },
-          { field: "category", message: !category ? "Required" : "Valid" },
-          { field: "description", message: !description ? "Required" : "Valid" },
-        ].filter((item) => item.message === "Required"),
-      })
+      logWithTime("⚠️ Validation failed: missing required fields");
+      res.status(400).json({ error: "Validation failed" });
+      return;
     }
 
-    let images: string[] = []
+    let images: string[] = [];
 
-    // If files are uploaded, send to Cloudinary
-    if (req.files && Array.isArray(req.files) && req.files.length > 0) {
-      console.log(" createProject - Uploading files to Cloudinary...")
+    if (images.length === 0) {
+  console.warn("⚠️ Skipping save: no valid images provided");
+  res.status(400).json({ error: "No images provided, project not saved" });
+  return;
+}
+    // --- Handle file uploads ---
+    if (files && files.length > 0) {
+      logWithTime("📤 Uploading files to Cloudinary", files.map(f => f.originalname));
       try {
-        const uploadResults = await uploadMultipleImagesToCloudinary(req.files)
-        images = uploadResults.map((r) => r.secure_url)
-        console.log(" createProject - Cloudinary upload successful:", images.length, "images")
-      } catch (cloudinaryError) {
-        console.error(" createProject - Cloudinary upload failed:", cloudinaryError)
-        return res.status(500).json({
-          error: "Image upload failed",
-          details: cloudinaryError instanceof Error ? cloudinaryError.message : "Unknown error",
-        })
+        const uploadResults = await uploadMultipleImagesToCloudinary(files);
+        images = uploadResults.map((r) => r.secure_url);
+        logWithTime("✅ Cloudinary upload success", images);
+      } catch (err) {
+        logWithTime("❌ Cloudinary upload failed", err);
+        res.status(500).json({ error: "Image upload failed" });
+        return;
       }
     } else if (req.body.images) {
-      // Fallback to images from body
-      if (Array.isArray(req.body.images)) images = req.body.images
+      logWithTime("🖼 Using images from request body");
+      if (Array.isArray(req.body.images)) images = req.body.images;
       else if (typeof req.body.images === "string") {
         try {
-          images = JSON.parse(req.body.images)
+          images = JSON.parse(req.body.images);
         } catch {
-          images = [req.body.images]
+          images = [req.body.images];
         }
       }
     }
 
-    console.log(" createProject - Final images array:", images)
+    // 🚨 Prevent saving if files were uploaded but images ended up empty
+    if (files && files.length > 0 && images.length === 0) {
+      logWithTime("⚠️ Skipping save: images empty after upload");
+      res.status(400).json({ error: "Image upload failed, project not saved" });
+      return;
+    }
+
+    logWithTime("💾 Preparing to save project with images", images);
 
     const project = new Project({
       title,
@@ -117,33 +130,31 @@ export async function createProject(req: AuthenticatedRequest, res: Response, ne
       category,
       description,
       images,
-    })
+    });
 
-    console.log(" createProject - Saving project to database...")
-    await project.save()
-    console.log(" createProject - Project saved successfully:", project._id)
+    logWithTime("📡 Saving project to DB...");
+    await project.save();
+    logWithTime("✅ Project saved", project._id);
 
-    res.status(201).json({
-      success: true,
-      message: "Project created successfully",
-      project,
-    })
+    res.status(201).json({ success: true, project });
   } catch (error) {
-    console.error(" createProject - Unexpected error:", error)
-    next(error)
+    logWithTime("❌ createProject - Unexpected error", error);
+    next(error);
   }
 }
+
 
 // ================== UPDATE PROJECT ==================
 export async function updateProject(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const { id } = req.params
-    const updateData: any = { ...req.body }
+    const updateData: Record<string, unknown> = { ...req.body }
+    const files = req.files as Express.Multer.File[] | undefined
 
-    // Parse images from body
     if (req.body.images) {
-      if (Array.isArray(req.body.images)) updateData.images = req.body.images
-      else if (typeof req.body.images === "string") {
+      if (Array.isArray(req.body.images)) {
+        updateData.images = req.body.images
+      } else if (typeof req.body.images === "string") {
         try {
           updateData.images = JSON.parse(req.body.images)
         } catch {
@@ -152,16 +163,16 @@ export async function updateProject(req: AuthenticatedRequest, res: Response, ne
       }
     }
 
-    // Upload new files to Cloudinary if present
-    if (req.files && Array.isArray(req.files) && req.files.length > 0) {
-      const uploadResults = await uploadMultipleImagesToCloudinary(req.files)
-      const newImages = uploadResults.map((r) => r.secure_url)
-      updateData.images = newImages // Replace all existing images
+    if (files && files.length > 0) {
+      const uploadResults = await uploadMultipleImagesToCloudinary(files)
+      updateData.images = uploadResults.map((r) => r.secure_url)
     }
 
     const project = await Project.findByIdAndUpdate(id, updateData, { new: true, runValidators: true })
-    //@ts-ignore
-    if (!project) return res.status(404).json({ error: "Project not found" })
+    if (!project) {
+      res.status(404).json({ error: "Project not found" })
+      return
+    }
 
     res.json({ success: true, message: "Project updated successfully", project })
   } catch (error) {
@@ -174,8 +185,10 @@ export async function deleteProject(req: AuthenticatedRequest, res: Response, ne
   try {
     const { id } = req.params
     const project = await Project.findByIdAndDelete(id)
-    //@ts-ignore
-    if (!project) return res.status(404).json({ error: "Project not found" })
+    if (!project) {
+      res.status(404).json({ error: "Project not found" })
+      return
+    }
 
     res.json({ success: true, message: "Project deleted successfully" })
   } catch (error) {

@@ -1,60 +1,84 @@
-// test-backend.ts
-import http from "http";
-import https from "https";
-import { parse } from "url";
+// Run with: npx tsx src/scripts/testApiFlow.ts
 
-// ✅ Change this to your backend endpoint
-const API_URL = "http://localhost:5000/api/projects";
+async function runTests() {
+  const BASE_URL = "http://localhost:5000/api/projects"; // adjust if needed
+  let createdId: string | null = null;
+  const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjhiNzVlM2JmYzRmNWY0NjEyYzJlY2FjIiwiZW1haWwiOiJhZG1pbkBhYmpheWludGVyaW9yLmNvbSIsImlhdCI6MTc1NzE4NjI2NiwiZXhwIjoxNzU3MjcyNjY2fQ.qpMTBVTGMYYFLS-0bcoFky82QHvmDhkUOONjC6FsioU"; // put a valid token here if auth is required
 
-// ✅ Add your real JWT token here
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjhiNzVlM2JmYzRmNWY0NjEyYzJlY2FjIiwiZW1haWwiOiJhZG1pbkBhYmpheWludGVyaW9yLmNvbSIsImlhdCI6MTc1NzE4NjI2NiwiZXhwIjoxNzU3MjcyNjY2fQ.qpMTBVTGMYYFLS-0bcoFky82QHvmDhkUOONjC6FsioU";
 
-// The project payload you want to test
-const payload = {
-  title: "Backend Debug Test",
-  location: "Lagos",
-  category: "Commercial",
-  description: "Testing if backend duplicates",
-  images: ["https://res.cloudinary.com/demo/image/upload/sample.jpg"],
-};
+  function logWithTime(step: string, data?: any) {
+    const now = new Date().toISOString();
+    console.log(`[${now}] ${step}`, data ?? "");
+  }
 
-const data = JSON.stringify(payload);
+  try {
+    // 1️⃣ Create Project
+    logWithTime("🚀 Creating project...");
+    let res = await fetch(BASE_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjhiNzVlM2JmYzRmNWY0NjEyYzJlY2FjIiwiZW1haWwiOiJhZG1pbkBhYmpheWludGVyaW9yLmNvbSIsImlhdCI6MTc1NzE4NjI2NiwiZXhwIjoxNzU3MjcyNjY2fQ.qpMTBVTGMYYFLS-0bcoFky82QHvmDhkUOONjC6FsioU", // replace if your backend requires JWT
+      },
+      body: JSON.stringify({
+        title: "Integration Test Project",
+        location: "Lagos",
+        category: "Commercial",
+        description: "Testing controller + route + model",
+        images: ["https://via.placeholder.com/150"], // fake image
+      }),
+    });
 
-const parsedUrl = parse(API_URL);
-const isHttps = parsedUrl.protocol === "https:";
+    let json = await res.json();
+    logWithTime(`✅ Create response [${res.status}]`, json);
+    if (!json.project || !json.project._id) throw new Error("Project creation failed");
+    createdId = json.project._id;
 
-const options: http.RequestOptions = {
-  hostname: parsedUrl.hostname || "localhost",
-  port: parsedUrl.port ? parseInt(parsedUrl.port) : (isHttps ? 443 : 80),
-  path: parsedUrl.path,
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "Content-Length": Buffer.byteLength(data),
-    "Authorization": `Bearer ${TOKEN}`, // ✅ send token
-  },
-};
+    // 2️⃣ Get All Projects
+    logWithTime("📡 Fetching all projects...");
+    res = await fetch(`${BASE_URL}?limit=5&page=1`);
+    json = await res.json();
+    logWithTime(`✅ GetProjects [${res.status}]`, json);
 
-const client = isHttps ? https : http;
+    // 3️⃣ Get Single Project
+    logWithTime("🔎 Fetching single project...");
+    res = await fetch(`${BASE_URL}/${createdId}`);
+    json = await res.json();
+    logWithTime(`✅ GetProject [${res.status}]`, json);
 
-const req = client.request(options, (res) => {
-  let body = "";
-  res.on("data", (chunk: Buffer) => (body += chunk.toString()));
-  res.on("end", () => {
-    console.log("✅ Status:", res.statusCode);
-    try {
-      const parsed = JSON.parse(body);
-      console.log("✅ Response JSON:", parsed);
-    } catch {
-      console.log("Raw response:", body);
-    }
-  });
-});
+    // 4️⃣ Update Project
+    logWithTime("✏️ Updating project...");
+    res = await fetch(`${BASE_URL}/${createdId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer testtoken",
+      },
+      body: JSON.stringify({
+        title: "Updated Test Project",
+        location: "Abuja",
+      }),
+    });
+    json = await res.json();
+    logWithTime(`✅ UpdateProject [${res.status}]`, json);
 
-req.on("error", (err: NodeJS.ErrnoException) => {
-  console.error("❌ Request error:", err.message);
-  console.error("👉 Full error:", err);
-});
+    // 5️⃣ Delete Project
+    logWithTime("🗑 Deleting project...");
+    res = await fetch(`${BASE_URL}/${createdId}`, {
+      method: "DELETE",
+      headers: { Authorization: "Bearer testtoken" },
+    });
+    json = await res.json();
+    logWithTime(`✅ DeleteProject [${res.status}]`, json);
 
-req.write(data);
-req.end();
+    // 6️⃣ Confirm Deletion
+    logWithTime("🔄 Confirming deletion...");
+    res = await fetch(`${BASE_URL}/${createdId}`);
+    json = await res.json();
+    logWithTime(`✅ Confirm Get After Delete [${res.status}]`, json);
+  } catch (err) {
+    logWithTime("❌ Test script error", err);
+  }
+}
+
+runTests();
