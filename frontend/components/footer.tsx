@@ -1,5 +1,12 @@
-import { Link } from "react-router-dom"
-import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from "lucide-react"
+import { Link } from "react-router-dom";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Facebook,
+  Instagram,
+  Linkedin,
+} from "lucide-react";
 
 export default function Footer() {
   return (
@@ -12,34 +19,62 @@ export default function Footer() {
               <div className="bg-white text-brand-blue p-2 rounded-lg">
                 <span className="font-bold text-xl">AJ</span>
               </div>
+              {/* <div className=" text-white p-2 rounded-lg">
+  <img 
+    src="https://res.cloudinary.com/dike9pceb/image/upload/v1757272579/slazzer_img_1744622557797_abhqep.png" 
+    alt="Company Logo" 
+    className="h-9 w-12 object-contain scale-150"
+  />
+</div> */}
               <div>
                 <h3 className="font-bold text-xl">AB Jay Interior</h3>
                 <p className="text-sm opacity-80">LTD</p>
               </div>
             </div>
-            <p className="text-sm opacity-80">Transforming spaces with precision & style across Nigeria and the UK.</p>
+            <p className="text-sm opacity-80">
+              Transforming spaces with precision & style across Nigeria and the
+              UK.
+            </p>
           </div>
 
           {/* Quick Links */}
           <div>
             <h4 className="font-semibold text-lg mb-4">Quick Links</h4>
             <div className="space-y-2">
-              <Link to="/" className="block hover:text-brand-green transition-colors">
+              <Link
+                to="/"
+                className="block hover:text-brand-green transition-colors"
+              >
                 Home
               </Link>
-              <Link to="/about" className="block hover:text-brand-green transition-colors">
+              <Link
+                to="/about"
+                className="block hover:text-brand-green transition-colors"
+              >
                 About Us
               </Link>
-              <Link to="/services" className="block hover:text-brand-green transition-colors">
+              <Link
+                to="/services"
+                className="block hover:text-brand-green transition-colors"
+              >
                 Services
               </Link>
-              <Link to="/gallery" className="block hover:text-brand-green transition-colors">
+              <Link
+                to="/gallery"
+                className="block hover:text-brand-green transition-colors"
+              >
                 Gallery
               </Link>
-              <Link to="/faq" className="block hover:text-brand-green transition-colors">
+              <Link
+                to="/faq"
+                className="block hover:text-brand-green transition-colors"
+              >
                 FAQ
               </Link>
-              <Link to="/contact" className="block hover:text-brand-green transition-colors">
+              <Link
+                to="/contact"
+                className="block hover:text-brand-green transition-colors"
+              >
                 Contact
               </Link>
             </div>
@@ -77,9 +112,29 @@ export default function Footer() {
 
             {/* Social Links */}
             <div className="flex space-x-4 mt-4">
-              <Facebook className="h-5 w-5 hover:text-brand-green cursor-pointer transition-colors" />
-              <Instagram className="h-5 w-5 hover:text-brand-green cursor-pointer transition-colors" />
-              <Linkedin className="h-5 w-5 hover:text-brand-green cursor-pointer transition-colors" />
+              <a
+                href="https://web.facebook.com/Abjayinteriorltd.co.uk"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Facebook className="h-5 w-5 hover:text-brand-green cursor-pointer transition-colors" />
+              </a>
+
+              <a
+                href="https://www.instagram.com/abjayinteriorltd/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Instagram className="h-5 w-5 hover:text-brand-green cursor-pointer transition-colors" />
+              </a>
+
+              <a
+                href="https://linkedin.com/in/yourprofile"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Linkedin className="h-5 w-5 hover:text-brand-green cursor-pointer transition-colors" />
+              </a>
             </div>
           </div>
         </div>
@@ -89,5 +144,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

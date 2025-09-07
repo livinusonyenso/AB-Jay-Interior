@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import Navbar from "../../components/navbar"
 import Footer from "../../components/footer"
@@ -10,7 +9,9 @@ import { Button } from "../../components/ui/button"
 import { Input } from "../../components/ui/input"
 import { Textarea } from "../../components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
-import { Phone, Mail, MapPin, MessageCircle, Clock, Send } from "lucide-react"
+import { Phone, Mail, MessageCircle, Send } from "lucide-react"
+import { toast } from "sonner"
+import Success from "../../components/success" // ✅ import your Success component
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -22,16 +23,54 @@ export default function ContactPage() {
     contactMethod: "email",
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log("Form submitted:", formData)
+    setLoading(true)
+
+    try {
+      const API_URL = "http://localhost:5000/api/contact"
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to send message")
+      }
+
+      toast.success("✅ Message sent successfully!")
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        service: "",
+        message: "",
+        contactMethod: "email",
+      })
+      setSubmitted(true) // ✅ show Success component
+    } catch (error: any) {
+      console.error("❌ Error:", error)
+      toast.error("Failed to send message. Please try again later.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleWhatsApp = () => {
     const message = `Hi AB Jay Interior! I'm interested in your services. My name is ${formData.name || "[Name]"} and I'd like to discuss ${formData.service || "your services"}.`
-    const whatsappUrl = `https://wa.me/2341234567890?text=${encodeURIComponent(message)}`
+    const whatsappUrl = `https://wa.me/23480984499?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, "_blank")
+  }
+
+  if (submitted) {
+    return <Success /> // ✅ render success page instead of form
   }
 
   return (
@@ -51,10 +90,11 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Contact Information */}
+      {/* Contact Info (unchanged) */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            {/* Call */}
             <Card className="text-center hover:shadow-lg transition-shadow duration-300">
               <CardContent className="p-8">
                 <div className="bg-brand-green/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -75,6 +115,7 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
+            {/* WhatsApp */}
             <Card className="text-center hover:shadow-lg transition-shadow duration-300">
               <CardContent className="p-8">
                 <div className="bg-brand-blue/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -89,6 +130,7 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
+            {/* Email */}
             <Card className="text-center hover:shadow-lg transition-shadow duration-300">
               <CardContent className="p-8">
                 <div className="bg-brand-red/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -110,11 +152,10 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Contact Form & Map */}
+      {/* Contact Form */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
             <div>
               <h2 className="text-3xl font-bold text-brand-blue mb-6">Get a Free Quote</h2>
               <p className="text-brand-gray mb-8">
@@ -123,6 +164,7 @@ export default function ContactPage() {
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Full Name + Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-brand-gray mb-2">Full Name *</label>
@@ -146,6 +188,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
+                {/* Phone + Service */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-brand-gray mb-2">Phone Number</label>
@@ -177,6 +220,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
+                {/* Message */}
                 <div>
                   <label className="block text-sm font-medium text-brand-gray mb-2">Project Details *</label>
                   <Textarea
@@ -188,6 +232,7 @@ export default function ContactPage() {
                   />
                 </div>
 
+                {/* Contact Method */}
                 <div>
                   <label className="block text-sm font-medium text-brand-gray mb-2">Preferred Contact Method</label>
                   <Select
@@ -205,81 +250,16 @@ export default function ContactPage() {
                   </Select>
                 </div>
 
-                <Button type="submit" className="w-full bg-brand-green hover:bg-brand-green/90 text-white py-3">
-                  <Send className="mr-2 h-5 w-5" />
-                  Send Message
+                {/* Submit */}
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-brand-green hover:bg-brand-green/90 text-white py-3 flex items-center justify-center"
+                >
+                  {loading ? "Sending..." : (<><Send className="mr-2 h-5 w-5" /> Send Message</>)}
                 </Button>
               </form>
             </div>
-
-            {/* Map & Office Info */}
-           <div className="flex flex-col gap-8 justify-between">
-      {/* Addresses Section */}
-      <div className="flex-1">
-        <h3 className="text-2xl font-bold text-brand-blue mb-6">Our Locations</h3>
-
-        <div className="space-y-6">
-          {/* Nigeria Office */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-4">
-                <MapPin className="h-6 w-6 text-brand-green mt-1" />
-                <div>
-                  <h4 className="font-semibold text-brand-blue mb-2">
-                    Nigeria Office
-                  </h4>
-                  <p className="text-brand-gray mb-2">
-                    123 Design Street, Victoria Island
-                    <br />
-                    Enugu & Abuja
-                  </p>
-                  <div className="flex items-center space-x-2 text-sm text-brand-gray">
-                    <Clock className="h-4 w-4" />
-                    <span>Mon - Fri: 8:00 AM - 6:00 PM</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* UK Office */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-4">
-                <MapPin className="h-6 w-6 text-brand-green mt-1" />
-                <div>
-                  <h4 className="font-semibold text-brand-blue mb-2">
-                    UK Office
-                  </h4>
-                  <p className="text-brand-gray mb-2">
-                    Arlington Parade Brixton Hill,
-                    <br />
-                    London UK.
-                  </p>
-                  <div className="flex items-center space-x-2 text-sm text-brand-gray">
-                    <Clock className="h-4 w-4" />
-                    <span>Mon - Fri: 9:00 AM - 5:00 PM</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Map Section */}
-      <div className="flex-1  rounded-lg overflow-hidden">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2485.9540995869625!2d-0.1206542235248042!3d51.45899917180228!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48760442771439c7%3A0xd9383757b2709e14!2sArlington%20Parade%2C%20Brixton%20Hill%2C%20London%2C%20UK!5e0!3m2!1sen!2sus!4v1757094516262!5m2!1sen!2sus"
-          width="100%"
-          height="100%"
-          style={{ border: 0, minHeight: "350px" }}
-          allowFullScreen
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-        ></iframe>
-      </div>
-    </div>
           </div>
         </div>
       </section>

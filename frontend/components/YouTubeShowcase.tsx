@@ -176,7 +176,8 @@ const YouTubeShowcase: React.FC<YouTubeShowcaseProps> = ({
           {videoList.map((_, index) => (
             <button
               key={index}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-red-600 scale-110' : 'bg-blue-300'}`}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex ? 'bg-blue-600 scale-110' 
+                  : 'bg-[rgb(16,185,129)]'}`}
               onClick={() => setCurrentIndex(index)}
             />
           ))}

@@ -10,6 +10,12 @@ import { Textarea } from "./Textarea"
 import { Button } from "./Button"
 import { useProjects } from "../hooks/useProjects"
 
+interface ProjectFormProps {
+  project?: Project | null
+  onSuccess: (project: Project) => void
+  onCancel: () => void
+}
+
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
@@ -20,17 +26,10 @@ const projectSchema = z.object({
     .min(1, "At least one image is required"),
 })
 
-interface ProjectFormProps {
-  project?: Project | null
-  onSuccess: (project: Project) => void
-  onCancel: () => void
-  isSubmitting?: boolean
-}
-
 const categories = ["Residential", "Commercial", "Industrial", "Educational", "Healthcare"]
 const locations = ["Lagos", "Abuja", "Port Harcourt", "New York", "London"]
 
-export const ProjectForm: React.FC<ProjectFormProps> = ({ project, onSuccess, onCancel, isSubmitting = false }) => {
+export const ProjectForm: React.FC<ProjectFormProps> = ({ project, onSuccess, onCancel }) => {
   const {
     register,
     handleSubmit,
@@ -49,8 +48,9 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ project, onSuccess, on
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [previews, setPreviews] = useState<string[]>(project?.images || [])
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const { createProject, updateProject } = useProjects()
+  const { createProject, updateProject, fetchProjects } = useProjects()
 
   // Sync form images with previews
   useEffect(() => {
@@ -76,6 +76,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ project, onSuccess, on
   }
 
 const onSubmitForm = async (data: ProjectFormData) => {
+  setIsSubmitting(true)
   try {
     // Only pass files for new uploads
     const filesToUpload = selectedFiles.length > 0 ? selectedFiles : undefined
@@ -95,10 +96,15 @@ const onSubmitForm = async (data: ProjectFormData) => {
       ? await updateProject(project.id, formData, filesToUpload)
       : await createProject(formData, filesToUpload)
 
+    // Refresh the projects list to show the new/updated project
+    await fetchProjects()
+    
     onSuccess(result.project)
   } catch (err) {
     console.error("Error submitting project:", err)
     alert("Failed to submit project. Check console for details.")
+  } finally {
+    setIsSubmitting(false)
   }
 }
 

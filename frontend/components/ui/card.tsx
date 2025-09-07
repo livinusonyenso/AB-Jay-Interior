@@ -13,8 +13,8 @@ const Card = React.forwardRef<HTMLDivElement, MotionDivProps>(
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.98 }}
+      // whileHover={{ scale: 1.03 }}
+      // whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
       className={cn(
         "rounded-2xl border bg-white/80 backdrop-blur-sm text-gray-900 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer",

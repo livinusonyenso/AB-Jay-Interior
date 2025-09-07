@@ -86,11 +86,6 @@ export async function createProject(
 
     let images: string[] = [];
 
-    if (images.length === 0) {
-  console.warn("⚠️ Skipping save: no valid images provided");
-  res.status(400).json({ error: "No images provided, project not saved" });
-  return;
-}
     // --- Handle file uploads ---
     if (files && files.length > 0) {
       logWithTime("📤 Uploading files to Cloudinary", files.map(f => f.originalname));
@@ -113,6 +108,13 @@ export async function createProject(
           images = [req.body.images];
         }
       }
+    }
+
+    // --- Validate images after processing ---
+    if (images.length === 0) {
+      logWithTime("⚠️ Skipping save: no valid images provided");
+      res.status(400).json({ error: "No images provided, project not saved" });
+      return;
     }
 
     // 🚨 Prevent saving if files were uploaded but images ended up empty

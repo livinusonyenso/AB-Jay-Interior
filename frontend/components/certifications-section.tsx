@@ -36,25 +36,25 @@ const accreditations = [
     name: "RIBA",
     fullName: "Royal Institute of British Architects",
     description: "Professional architectural standards",
-    logo: "/images/ab-jay-interior19.jpg?height=80&width=80&text=RIBA",
+    logo: "/images/Certifications4.jpg?height=80&width=80&text=RIBA",
   },
   {
     name: "FMB",
     fullName: "Federation of Master Builders",
     description: "UK construction excellence",
-    logo: "/images/ab-jay-interior19.jpg?height=80&width=80&text=FMB",
+    logo: "/images/Certifications3.jpg?height=80&width=80&text=FMB",
   },
   {
     name: "COREN",
     fullName: "Council for Regulation of Engineering",
     description: "Nigerian engineering standards",
-    logo: "/images/ab-jay-interior19.jpg?height=80&width=80&text=COREN",
+    logo: "/images/Certifications2.jpg?height=80&width=80&text=COREN",
   },
   {
     name: "TrustMark",
     fullName: "Government Endorsed Quality",
     description: "UK government quality scheme",
-    logo: "/images/ab-jay-interior19.jpg?height=80&width=80&text=TrustMark",
+    logo: "/images/Certifications1.png?height=80&width=80&text=TrustMark",
   },
 ]
 

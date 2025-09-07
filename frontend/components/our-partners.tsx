@@ -3,43 +3,43 @@ const partners = [
   {
     name: "Checkatrade",
     description: "Verified Trade Professional",
-    logo: "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
+    logo: "https://res.cloudinary.com/dike9pceb/image/upload/v1757272580/Certifications1_uux6cb.png",
   },
   {
     name: "IGBOSERVICE",
     description: "Trusted Service Provider",
-    logo: "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
+    logo: "https://res.cloudinary.com/dike9pceb/image/upload/v1757272578/Certifications2_jps0u2.jpg",
   },
   {
     name: "Federation of Master Builders",
     description: "UK Construction Standards",
-    logo: "https://images.pexels.com/photos/3184293/pexels-photo-3184293.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
+    logo: "https://res.cloudinary.com/dike9pceb/image/upload/v1757272579/Certifications3_tehhkg.jpg",
   },
   {
     name: "COREN",
     description: "Council for Regulation of Engineering",
-    logo: "https://images.pexels.com/photos/3184294/pexels-photo-3184294.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
+    logo: "https://res.cloudinary.com/dike9pceb/image/upload/v1757272579/Certifications4_kqds26.jpg",
   },
   {
     name: "RIBA",
     description: "Royal Institute of British Architects",
-    logo: "https://images.pexels.com/photos/3184295/pexels-photo-3184295.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
+    logo: "https://res.cloudinary.com/dike9pceb/image/upload/v1757272578/Certifications5_tpgeuo.jpg",
   },
   {
     name: "TrustMark",
     description: "Government Endorsed Quality",
     logo: "https://images.pexels.com/photos/3184296/pexels-photo-3184296.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
   },
-  {
-    name: "NIOB",
-    description: "Nigerian Institute of Building",
-    logo: "https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
-  },
-  {
-    name: "ARCON",
-    description: "Architects Registration Council",
-    logo: "https://images.pexels.com/photos/3184298/pexels-photo-3184298.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
-  },
+  // {
+  //   name: "NIOB",
+  //   description: "Nigerian Institute of Building",
+  //   logo: "https://images.pexels.com/photos/3184297/pexels-photo-3184297.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
+  // },
+  // {
+  //   name: "ARCON",
+  //   description: "Architects Registration Council",
+  //   logo: "https://images.pexels.com/photos/3184298/pexels-photo-3184298.jpeg?auto=compress&cs=tinysrgb&w=160&h=80&fit=crop",
+  // },
 ];
 
 export default function OurPartners() {

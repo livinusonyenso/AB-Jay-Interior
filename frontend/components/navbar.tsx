@@ -43,15 +43,20 @@ export default function Navbar() {
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="bg-brand-blue text-white p-2 rounded-lg">
-              <span className="font-bold text-xl">AJ</span>
-            </div>
-            <div>
+           <div className=" text-white p-2 rounded-lg">
+  <img 
+    src="https://res.cloudinary.com/dike9pceb/image/upload/v1757272579/slazzer_img_1744622557797_abhqep.png" 
+    alt="Company Logo" 
+    className="h-8 w-12 object-contain scale-150"
+  />
+</div>
+
+            {/* <div>
               <h1 className="font-bold text-xl text-brand-blue">
                 AB Jay Interior
               </h1>
               <p className="text-sm text-brand-gray">LTD</p>
-            </div>
+            </div> */}
           </Link>
 
           {/* Desktop Navigation */}

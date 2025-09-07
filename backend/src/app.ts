@@ -9,6 +9,8 @@ import projectRoutes from './routes/projects.routes';
 import quoteRoutes from './routes/quotes.routes';
 import { errorHandler } from './middlewares/error.middleware';
 import { notFoundHandler } from './middlewares/notFound.middleware';
+import contactRoutes from "./routes/contactRoutes"
+
 
 
 const app = express();
@@ -53,6 +55,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/quotes', quoteRoutes);
+app.use("/api/contact", contactRoutes)
 
 // Error handling middlewares
 app.use(notFoundHandler);

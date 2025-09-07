@@ -13,7 +13,7 @@ export const ProjectsPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting] = useState(false);
 
   // Open the create modal
   const openCreateModal = () => {
@@ -128,7 +128,6 @@ export const ProjectsPage: React.FC = () => {
             setIsModalOpen(false);
           }}
           onCancel={() => setIsModalOpen(false)}
-          isSubmitting={isSubmitting}
         />
       </Modal>
     </div>
