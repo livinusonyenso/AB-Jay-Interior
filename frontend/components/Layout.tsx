@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useAuth } from "../src/context/AuthContext"
 import { LayoutDashboard, FolderOpen, FileText, LogOut, Menu, X } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"

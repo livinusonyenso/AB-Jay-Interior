@@ -9,7 +9,7 @@ import ScrollToTop from "../components/ScrollToTop.tsx";
 import RequestQuote from "./pages/RequestQuote.tsx";
 import "./index.css";
 import AdminPanel from "./pages/AdminPanel.tsx";
-import Success from "../components/Success.tsx"
+import Success from "../components/Success.tsx";
 
 function App() {
   return (

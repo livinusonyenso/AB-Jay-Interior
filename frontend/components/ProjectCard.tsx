@@ -10,7 +10,7 @@ interface ProjectCardProps {
   viewMode: 'grid' | 'list';
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEdit, onDelete, viewMode }) => {
+export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEdit, onDelete }) => {
   const formatDate = (date: string) =>
     new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 

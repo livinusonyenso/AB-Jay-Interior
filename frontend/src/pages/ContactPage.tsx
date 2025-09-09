@@ -11,8 +11,7 @@ import { Textarea } from "../../components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
 import { Phone, Mail, MessageCircle, Send } from "lucide-react"
 import { toast } from "sonner"
-import Success from "../../components/success" // ✅ import your Success component
-
+import Success from "../../components/Success"
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",

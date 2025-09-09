@@ -9,7 +9,7 @@ import { Phone, Mail, MessageCircle, } from "lucide-react"
 
 
 function RequestQuote() {
-   const [formData, setFormData] = useState({
+   const [formData] = useState({
       name: "",
       email: "",
       phone: "",

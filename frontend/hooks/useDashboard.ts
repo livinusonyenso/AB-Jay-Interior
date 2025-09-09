@@ -3,7 +3,7 @@ import { DashboardStats } from '../src/types';
 // import { dashboardAPI } from '../src/lib/api';
 
 export const useDashboard = () => {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [stats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
