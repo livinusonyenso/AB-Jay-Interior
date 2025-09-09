@@ -1,30 +1,60 @@
-import jwt, { SignOptions } from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+import { verifyToken } from "../utils/jwt";
+import { Admin, IAdmin } from "../models/Admin";
 
-export interface JwtPayload {
-  adminId: string;
-  email: string;
+export interface AuthenticatedRequest extends Request {
+  admin?: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+  };
 }
 
-// Generate a JWT
-export function generateToken(payload: JwtPayload): string {
-  const secret = process.env.JWT_SECRET;
-  const expiresIn = (process.env.JWT_EXPIRES_IN || "1d") as SignOptions["expiresIn"];
+export async function authenticateAdmin(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const authHeader = req.headers.authorization;
 
-  if (!secret) {
-    throw new Error("JWT_SECRET environment variable is required");
+    if (!authHeader) {
+      console.log("❌ No Authorization header received");
+      res.status(401).json({ error: "Access token required" });
+      return;
+    }
+
+    const token = authHeader.startsWith("Bearer ")
+      ? authHeader.substring(7)
+      : authHeader;
+
+    console.log("🔑 Raw token:", token);
+
+    const decoded = verifyToken(token) as { adminId: string };
+    console.log("✅ Decoded token:", decoded);
+
+    const admin = await Admin.findById(decoded.adminId)
+      .select("-passwordHash")
+      .lean<IAdmin | null>();
+
+    console.log("✅ Admin from DB:", admin);
+
+    if (!admin) {
+      res.status(401).json({ error: "Invalid token" });
+      return;
+    }
+
+    req.admin = {
+      id: admin._id.toString(),
+      email: admin.email,
+      name: admin.name,
+      role: admin.role,
+    };
+
+    next();
+  } catch (error) {
+    console.error("❌ Token verification failed:", error);
+    res.status(401).json({ error: "Invalid token" });
   }
-
-  return jwt.sign(payload, secret, { expiresIn });
-}
-
-// Verify a JWT
-export function verifyToken(token: string): JwtPayload {
-  const secret = process.env.JWT_SECRET;
-
-  if (!secret) {
-    throw new Error("JWT_SECRET environment variable is required");
-  }
-
-  const decoded = jwt.verify(token, secret);
-  return decoded as JwtPayload;
 }

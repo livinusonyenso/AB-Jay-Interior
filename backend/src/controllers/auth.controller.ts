@@ -4,6 +4,7 @@ import { comparePassword } from '../utils/password';
 import { generateToken } from '../utils/jwt';
 import { AuthenticatedRequest } from '../middlewares/auth.middleware';
 
+
 export async function login(
   req: Request,
   res: Response,
