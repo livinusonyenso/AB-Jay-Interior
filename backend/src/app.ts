@@ -56,6 +56,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/quotes', quoteRoutes);
 app.use("/api/contact", contactRoutes)
+app.get("/", (req, res) => {
+  res.json({ message: "🚀 Backend API is running" });
+});
 
 // Error handling middlewares
 app.use(notFoundHandler);

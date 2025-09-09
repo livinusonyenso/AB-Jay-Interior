@@ -1,7 +1,7 @@
 import type { LoginResponse, MeResponse, ProjectFormData } from "../types"
 
 // ✅ Base URL for backend
-const API_BASE_URL = "http://localhost:5000/api"
+const API_BASE_URL = "https://ab-jay-interior.onrender.com/"
 
 // Token management
 export const tokenStorage = {
