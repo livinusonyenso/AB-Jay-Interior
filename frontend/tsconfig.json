@@ -27,5 +27,7 @@
     }
   },
   "include": ["src"],
+    "exclude": ["node_modules", "dist", "**/*.test.ts","src/scripts", "tests", "**/*.test.ts"],
+
   "references": [{ "path": "./tsconfig.node.json" }]
 }
