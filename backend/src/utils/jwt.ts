@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from "jsonwebtoken";
 
 export interface JwtPayload {
   adminId: string;
@@ -7,21 +7,11 @@ export interface JwtPayload {
 
 export function generateToken(payload: JwtPayload): string {
   const secret = process.env.JWT_SECRET;
-  const expiresIn = process.env.JWT_EXPIRES_IN || '1d';
+  const expiresIn = (process.env.JWT_EXPIRES_IN || "1d") as SignOptions["expiresIn"];
 
   if (!secret) {
-    throw new Error('JWT_SECRET environment variable is required');
+    throw new Error("JWT_SECRET environment variable is required");
   }
 
   return jwt.sign(payload, secret, { expiresIn });
-}
-
-export function verifyToken(token: string): JwtPayload {
-  const secret = process.env.JWT_SECRET;
-
-  if (!secret) {
-    throw new Error('JWT_SECRET environment variable is required');
-  }
-
-  return jwt.verify(token, secret) as JwtPayload;
 }
