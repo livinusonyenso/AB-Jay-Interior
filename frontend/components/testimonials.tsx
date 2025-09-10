@@ -1,36 +1,51 @@
 import { Card, CardContent } from "../components/ui/card"
 import { Star, Quote } from "lucide-react"
 
-const testimonials = [
+export const testimonials = [
   {
-    name: "Sarah Johnson",
-    location: "Lagos, Nigeria",
+    name: "Justice",
+    location: "Kennington, UK",
     rating: 5,
-    text: "AB Jay Interior transformed our home beyond our expectations. Their attention to detail and creative vision made our space both beautiful and functional. Highly recommended!",
-    project: "Residential Design",
+    text: "I can't speak more highly of the job on completion and he thoroughly cleaned the area before leaving. I would not hesitate recommending to friends and family. Justice did a fantastic job. He is a quick worker and has finished the job to a high standard. Very happy.",
+    project: "Plastering Work",
   },
   {
-    name: "Michael Chen",
-    location: "London, UK",
+    name: "Caden",
+    location: "Peckham, UK",
     rating: 5,
-    text: "Professional, reliable, and incredibly talented. They delivered our office renovation on time and within budget. The team was a pleasure to work with throughout the project.",
-    project: "Office Setup",
+    text: "Plastering 5 bedrooms, dining room, and living room, as well as removing fireplace. This is the second time I have worked with the guys. Excellent and efficient. Clearly have pride in their work and look to help. Also just good guys.",
+    project: "Full House Plastering",
   },
   {
-    name: "Adaora Okafor",
-    location: "Abuja, Nigeria",
+    name: "Emily",
+    location: "Stockwell, UK",
     rating: 5,
-    text: "From concept to completion, AB Jay Interior exceeded every expectation. Their local insight and international standards made all the difference in our renovation project.",
-    project: "Full Renovation",
+    text: "He is a very good and experienced builder. Will recommend him for building services. Justice was really great, arrived on time, excellent workmanship, and was very tidy and pleasant. I would recommend Justice to anyone looking for great company to carry out their works. You will not be disappointed.",
+    project: "Building Services",
   },
   {
-    name: "James Wilson",
-    location: "Manchester, UK",
+    name: "Mr Jett Carrigen",
+    location: "Clapham, UK",
     rating: 5,
-    text: "Outstanding craftsmanship and design expertise. They understood our vision perfectly and brought it to life with precision and style. Couldn't be happier with the results.",
-    project: "Interior Decoration",
+    text: "Plastering of two bedrooms and boxing window. Justice has done a fantastic job plastering two bedrooms. Fair price, great quality, and really nice guy. I would definitely use again. Thank you.",
+    project: "Bedroom Plastering",
   },
-]
+  {
+    name: "Jane",
+    location: "East Dulwich, UK",
+    rating: 5,
+    text: "Plastering of partition wall. I also wish to drop another feedback for the painting work after plastering. He is a time keeper and someone you can leave property without being worried.",
+    project: "Partition Wall Plastering",
+  },
+  {
+    name: "Octane ES10",
+    location: "Unknown",
+    rating: 5,
+    text: "Justice and his team were fantastic. Our house was in need of total refurb. It's not an exaggeration to say the house had not been touched since 1950s. All the internal wattle and daub walls came down and Justice brought our house up to modern fire regulations and building control standards. The plastering was beautiful. He worked great with our electrician and plumber, and we're delighted. So glad we found Justice and his team. Thank you again Justice, Jeff, and Jennifer.",
+    project: "Full House Refurbishment",
+  },
+];
+
 
 export default function Testimonials() {
   return (
