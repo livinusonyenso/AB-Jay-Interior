@@ -10,11 +10,14 @@ import RequestQuote from "./pages/RequestQuote.tsx";
 import "./index.css";
 import AdminPanel from "./pages/AdminPanel.tsx";
 import Success from "../components/Success.tsx";
+import WhatsAppSupport from "../components/WhatsAppSupport.tsx";
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
+       <WhatsAppSupport phoneNumber="2348139422159" message="Hi, I need help!" />
+
       <div className="min-h-screen">
        <Routes>
   <Route path="/" element={<HomePage />} />

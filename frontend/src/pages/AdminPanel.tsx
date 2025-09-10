@@ -12,6 +12,8 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 import { LoadingSpinner } from "../../components/LoadingSpinner"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import { CreateProject } from "../pages/Admin/CreateProject"
+import { AdminQuotes } from "./Admin/AdminQuotes"
 
 const AdminRoutes: React.FC = () => {
   return (
@@ -19,7 +21,9 @@ const AdminRoutes: React.FC = () => {
      <Routes>
   <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
   <Route path="/dashboard" element={<DashboardPage />} />
-<Route path="/projects/create" element={<ProjectsPage />} />
+<Route path="/projects/create" element={<CreateProject/>} />
+<Route path="/projects" element={<ProjectsPage />} />
+  <Route path="/quotes" element={<AdminQuotes />} />
   <Route path="/submissions" element={<SubmissionsPage />} />
   <Route path="*" element={<Navigate to="/admin/dashboard" replace />} />
 </Routes>

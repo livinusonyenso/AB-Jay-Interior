@@ -6,7 +6,7 @@ import { ProjectForm } from '../../../components/ProjectForm';
 import { ProjectCard } from '../../../components/ProjectCard';
 import { Modal } from '../../../components/Modal';
 import { Project } from '../../types';
-import { Plus, Grid, List, FolderOpen } from 'lucide-react';
+import { FolderOpen } from 'lucide-react';
 
 export const ProjectsPage: React.FC = () => {
   const { projects, loading, error, createProject, updateProject, deleteProject } = useProjects();
@@ -54,36 +54,6 @@ export const ProjectsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Projects</h1>
-          <p className="text-gray-600">Manage your project portfolio</p>
-        </div>
-
-        {/* View toggle + New Project */}
-        <div className="flex items-center space-x-3">
-          <div className="flex bg-gray-100 rounded-lg p-1">
-            <button
-              onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
-            >
-              <Grid className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded-md transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'}`}
-            >
-              <List className="h-4 w-4" />
-            </button>
-          </div>
-
-          <Button onClick={openCreateModal}>
-            <Plus className="h-4 w-4 mr-2" />
-            New Project
-          </Button>
-        </div>
-      </div>
 
       {/* Projects List */}
       {projects.length === 0 ? (

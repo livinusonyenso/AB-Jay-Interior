@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { useAuth } from "../src/context/AuthContext"
-import { LayoutDashboard, FolderOpen, FileText, LogOut, Menu, X } from "lucide-react"
+import { LayoutDashboard,PlusCircle, FolderOpen, FileText, LogOut, Menu, X } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 
 interface LayoutProps {
@@ -18,8 +18,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const navigation = [
     { name: "Dashboard", path: "/admin/dashboard", icon: LayoutDashboard },
+    { name: "Create Projects", path: "/admin/projects/create",icon: PlusCircle  },
     { name: "Projects", path: "/admin/projects", icon: FolderOpen },
-    { name: "Submissions", path: "/admin/submissions", icon: FileText },
+    { name: "Quotes", path: "/admin/quotes", icon: FileText },
+    // { name: "Submissions", path: "/admin/submissions", icon: FileText },
   ]
 
   const handleLogout = () => {

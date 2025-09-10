@@ -102,11 +102,11 @@ export const DashboardPage: React.FC = () => {
 </button>
 
 <button 
-  onClick={() => {navigate("/admin/submissions")}}
+  onClick={() => {navigate("/admin/quotes")}}
   className="w-full text-left px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
 >
-  <div className="font-medium text-green-900">Review Submissions</div>
-  <div className="text-sm text-green-600">Check latest form submissions</div>
+  <div className="font-medium text-green-900">Review Quotes</div>
+  <div className="text-sm text-green-600">Check latest form quotes</div>
 </button>
 
           </div>

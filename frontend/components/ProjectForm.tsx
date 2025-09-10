@@ -110,58 +110,96 @@ const onSubmitForm = async (data: ProjectFormData) => {
 
 
   return (
-    <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6">
-      <Input label="Title" {...register("title")} error={errors.title?.message} />
-      <Textarea label="Description" {...register("description")} error={errors.description?.message} rows={4} />
+   <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-6 bg-white p-6 rounded-xl shadow-md">
+  {/* Title */}
+ <Input 
+  label="Title" 
+  {...register("title")} 
+  error={errors.title?.message} 
+  className="border border-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg"
+/>
 
-      <div className="grid grid-cols-2 gap-4">
-        <select {...register("category")} className="border rounded p-2">
-          <option value="">Select Category</option>
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
+<Textarea 
+  label="Description" 
+  {...register("description")} 
+  error={errors.description?.message} 
+  rows={4}
+  className="border border-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg"
+/>
 
-        <select {...register("location")} className="border rounded p-2">
-          <option value="">Select Location</option>
-          {locations.map((loc) => (
-            <option key={loc} value={loc}>
-              {loc}
-            </option>
-          ))}
-        </select>
-      </div>
+  {/* Category & Location */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <select
+      {...register("category")}
+      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+    >
+      <option value="">Select Category</option>
+      {categories.map((cat) => (
+        <option key={cat} value={cat}>{cat}</option>
+      ))}
+    </select>
 
-      <div>
-        <label className="block mb-2">Images</label>
-        <input type="file" multiple accept="image/*" onChange={handleFileChange} />
-        <div className="flex space-x-2 mt-2 flex-wrap">
-          {previews.map((url, idx) => (
-            <div key={idx} className="relative">
-              <img src={url || "/placeholder.svg"} alt="preview" className="w-20 h-20 object-cover rounded border" />
-              <button
-                type="button"
-                onClick={() => removeImage(idx)}
-                className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center"
-              >
-                ×
-              </button>
-            </div>
-          ))}
+    <select
+      {...register("location")}
+      className="border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+    >
+      <option value="">Select Location</option>
+      {locations.map((loc) => (
+        <option key={loc} value={loc}>{loc}</option>
+      ))}
+    </select>
+  </div>
+
+  {/* Images */}
+  <div>
+    <label className="block mb-2 text-gray-700 font-medium">Images</label>
+    <input 
+      type="file" 
+      multiple 
+      accept="image/*" 
+      onChange={handleFileChange} 
+      className="block w-full text-sm text-gray-600"
+    />
+    <div className="flex flex-wrap gap-3 mt-3">
+      {previews.map((url, idx) => (
+        <div key={idx} className="relative group">
+          <img 
+            src={url || "/placeholder.svg"} 
+            alt="preview" 
+            className="w-24 h-24 object-cover rounded-lg border shadow-sm transition-transform transform hover:scale-105"
+          />
+          <button
+            type="button"
+            onClick={() => removeImage(idx)}
+            className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+          >
+            ×
+          </button>
         </div>
-        {errors.images && <p className="text-red-600">{errors.images.message}</p>}
-      </div>
+      ))}
+    </div>
+    {errors.images && <p className="text-red-600 mt-1">{errors.images.message}</p>}
+  </div>
 
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="secondary" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button type="submit" loading={isSubmitting}>
-          {project ? "Update" : "Create"}
-        </Button>
-      </div>
-    </form>
+  {/* Action Buttons */}
+  <div className="flex justify-end space-x-3">
+    <Button 
+      type="button" 
+      variant="secondary" 
+      onClick={onCancel}
+      className="px-6 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition"
+    >
+      Cancel
+    </Button>
+    <Button 
+      type="submit" 
+      loading={isSubmitting}
+      className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition"
+    >
+      {project ? "Update" : "Create"}
+    </Button>
+  </div>
+</form>
+
   )
 }
