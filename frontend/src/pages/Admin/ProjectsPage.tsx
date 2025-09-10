@@ -12,7 +12,7 @@ export const ProjectsPage: React.FC = () => {
   const { projects, loading, error, createProject, updateProject, deleteProject } = useProjects();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [viewMode] = useState<'grid' | 'list'>('grid');
 
   // Open the create modal
   const openCreateModal = () => {

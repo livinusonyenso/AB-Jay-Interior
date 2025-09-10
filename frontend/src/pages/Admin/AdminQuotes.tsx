@@ -42,33 +42,34 @@ export const AdminQuotes: React.FC = () => {
   });
 
   // Fetch quotes using quotesAPI wrapper
-  const fetchQuotes = async (page = 1, limit = 10) => {
-    setLoading(true);
-    setError(null);
+  const fetchQuotes = async () => {
+  setLoading(true);
+  setError(null);
 
-    try {
-      // quotesAPI.getAll will automatically include token from tokenStorage
-      const data = await quotesAPI.getAll();
-      if (!data?.quotes) throw new Error("No quotes returned from API.");
+  try {
+    // quotesAPI.getAll will automatically include token from tokenStorage
+    const data = await quotesAPI.getAll();
+    if (!data?.quotes) throw new Error("No quotes returned from API.");
 
-      // Handle pagination manually (since your backend returns it)
-      setQuotes(data.quotes);
+    // Handle pagination manually (since your backend returns it)
+    setQuotes(data.quotes);
+    //@ts-ignore
+    if (data.pagination) {
       //@ts-ignore
-      if (data.pagination) {
-            //@ts-ignore
-        setPagination(data.pagination);
-      }
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Failed to load quotes");
-    } finally {
-      setLoading(false);
+      setPagination(data.pagination);
     }
-  };
+  } catch (err: any) {
+    console.error(err);
+    setError(err.message || "Failed to load quotes");
+  } finally {
+    setLoading(false);
+  }
+};
 
-  useEffect(() => {
-    fetchQuotes(pagination.page, pagination.limit);
-  }, [pagination.page, pagination.limit]);
+
+ useEffect(() => {
+  fetchQuotes(); // no arguments needed
+}, [pagination.page, pagination.limit]);
 
   const handlePrevPage = () => {
     if (pagination.page > 1) {
