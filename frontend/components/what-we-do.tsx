@@ -1,61 +1,71 @@
-import { Card, CardContent } from "../components/ui/card"
-import { Home, Building2, Wrench, Palette, Hammer, Sparkles } from "lucide-react"
+import { Card } from "../components/ui/card"
 
 const services = [
   {
-    icon: Home,
     title: "Residential Design",
-    description: "Complete home interior design and decoration services for modern living spaces.",
+    description: "Transform your home into a luxurious sanctuary",
+    image: "https://res.cloudinary.com/dike9pceb/image/upload/v1757670896/pexels-curtis-adams-1694007-5008401_im4hux.jpg",
+    features: ["Space Planning", "Custom Furniture", "Color Consultation"],
   },
   {
-    icon: Building2,
-    title: "Office Setup",
-    description: "Professional office design and setup to enhance productivity and brand image.",
+    title: "Commercial Spaces",
+    description: "Create inspiring work environments",
+    image: "https://res.cloudinary.com/dike9pceb/image/upload/v1757672704/pexels-vardarious-3887985_krlawu.jpg",
+    features: ["Office Design", "Retail Spaces", "Hospitality"],
   },
   {
-    icon: Wrench,
-    title: "Full Renovation",
-    description: "Complete property renovation from concept to completion with quality finishes.",
-  },
-  {
-    icon: Palette,
-    title: "Interior Decoration",
-    description: "Expert color schemes, furniture selection, and decorative elements.",
-  },
-  {
-    icon: Hammer,
-    title: "Plastering & Tiling",
-    description: "Professional plastering and tiling services with attention to detail.",
-  },
-  {
-    icon: Sparkles,
-    title: "Custom Solutions",
-    description: "Bespoke design solutions tailored to your unique requirements and style.",
+    title: "Full Renovations",
+    description: "Complete transformation from concept to completion",
+    image: "https://res.cloudinary.com/dike9pceb/image/upload/v1757673028/the-prototype-FP7Fvx6Ni-A-unsplash_wmhqfm.jpg",
+    features: ["Project Management", "Construction Oversight", "Final Styling"],
   },
 ]
 
-export default function WhatWeDo() {
+export function WhatWeDo() {
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-brand-blue mb-4">What We Do</h2>
-          <p className="text-xl text-brand-gray max-w-3xl mx-auto">
-            We offer comprehensive interior design and renovation services to transform your spaces into beautiful,
-            functional environments that reflect your style and needs.
+    <section id="services" className="py-24 px-6 bg-gradient-to-br from-slate-50 to-blue-50/30">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16 animate-fade-in-up">
+          <h2 className="luxury-heading text-4xl md:text-5xl mb-6 text-slate-800 bg-gradient-to-r from-blue-800 to-teal-700 bg-clip-text text-transparent">
+            Our Services
+          </h2>
+          <p className="luxury-text text-xl text-slate-600 max-w-3xl mx-auto text-balance">
+            We create bespoke interiors that reflect your unique style and enhance your lifestyle
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow duration-300 border-0 shadow-md">
-              <CardContent className="p-8 text-center">
-                <div className="bg-brand-green/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <service.icon className="h-8 w-8 text-brand-green" />
+            <Card
+              key={index}
+              className="group overflow-hidden border border-blue-100/50 shadow-lg hover:shadow-2xl hover:shadow-blue-200/25 transition-all duration-500 bg-white/80 backdrop-blur-sm"
+            >
+              <div className="relative h-64 overflow-hidden">
+                <img
+                  src={service.image || "/placeholder.svg"}
+                  alt={service.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-blue-800/40 to-transparent" />
+                <div className="absolute bottom-6 left-6 text-white">
+                  <h3 className="luxury-heading text-2xl mb-2 text-white drop-shadow-lg">
+                    {service.title}
+                  </h3>
+                  <p className="luxury-text text-sm opacity-95 text-blue-50">
+                    {service.description}
+                  </p>
                 </div>
-                <h3 className="text-xl font-semibold text-brand-blue mb-4">{service.title}</h3>
-                <p className="text-brand-gray">{service.description}</p>
-              </CardContent>
+              </div>
+              <div className="p-6 bg-gradient-to-b from-white to-slate-50/50">
+                <ul className="space-y-3">
+                  {service.features.map((feature, idx) => (
+                    <li key={idx} className="luxury-text text-slate-700 flex items-center group-hover:text-slate-800 transition-colors">
+                      <div className="w-2.5 h-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full mr-3 shadow-sm" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </Card>
           ))}
         </div>

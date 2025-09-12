@@ -1,7 +1,8 @@
 import Navbar from "../../components/navbar"
-import HeroSection from "../../components/hero-section"
-import WhatWeDo from "../../components/what-we-do"
+import {HeroSection} from "../../components/hero-section"
+import {WhatWeDo} from "../../components/what-we-do"
 import WhyChooseUs from "../../components/why-choose-us"
+import {PortfolioGrid} from "../../components/PortfolioGrid"
 import ProjectHighlights from "../../components/project-highlights"
 import OurPartners from "../../components/our-partners"
 import Testimonials from "../../components/testimonials"
@@ -23,6 +24,7 @@ export default function HomePage() {
       <Navbar />
       <HeroSection />
       <WhatWeDo />
+      <PortfolioGrid />
       <WhyChooseUs />
       <ProjectHighlights />
       <RecentProjects/>
