@@ -23,7 +23,7 @@ const services = [
 
 export function WhatWeDo() {
   return (
-    <section id="services" className="py-24 px-6 bg-gradient-to-br from-slate-50 to-blue-50/30">
+    <section id="services" className="py-8 px-6 bg-gradient-to-br from-slate-50 to-blue-50/30">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 animate-fade-in-up">
           <h2 className="luxury-heading text-4xl md:text-5xl mb-6 text-slate-800 bg-gradient-to-r from-blue-800 to-teal-700 bg-clip-text text-transparent">

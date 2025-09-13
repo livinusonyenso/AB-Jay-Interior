@@ -125,7 +125,7 @@ export default function ServicesPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-br from-brand-blue to-brand-blue/80 text-white">
+      <section className="py-10 bg-gradient-to-br from-brand-blue to-brand-blue/80 text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">

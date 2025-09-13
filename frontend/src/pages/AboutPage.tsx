@@ -1,6 +1,5 @@
 import Navbar from "../../components/navbar"
 import Footer from "../../components/footer"
-import TeamSection from "../../components/team-section"
 import CertificationsSection from "../../components/certifications-section"
 import { Card, CardContent } from "../../components/ui/card"
 import { Users, Target, Heart, Award } from "lucide-react"
