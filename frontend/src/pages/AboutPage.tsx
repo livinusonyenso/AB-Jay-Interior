@@ -94,7 +94,7 @@ export default function AboutPage() {
 
 
       {/* Add Team Section */}
-      <TeamSection />
+      {/* <TeamSection /> */}
 
       {/* Mission, Vision, Values - keep existing */}
       <section className="py-20 bg-gray-50">

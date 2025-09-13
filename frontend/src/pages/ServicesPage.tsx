@@ -11,6 +11,12 @@ import {
   Sparkles,
   ArrowRight,
   Check,
+  Clock,
+  Star,
+  Zap,
+  Trophy,
+  Heart,
+  Gem,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -28,7 +34,8 @@ const services = [
       "Color scheme consultation",
       "Space planning and optimization",
     ],
-    price: "From ₦500,000",
+    badge: { icon: Heart, label: "Most Popular", color: "bg-rose-100 text-rose-800" },
+    timeline: "3-6 weeks",
   },
   {
     icon: Building2,
@@ -43,7 +50,8 @@ const services = [
       "Reception area design",
       "Lighting and acoustics",
     ],
-    price: "From ₦800,000",
+    badge: { icon: Zap, label: "Quick Start", color: "bg-amber-100 text-amber-800" },
+    timeline: "2-4 weeks",
   },
   {
     icon: Wrench,
@@ -58,7 +66,8 @@ const services = [
       "Project management",
       "Quality assurance",
     ],
-    price: "From ₦2,000,000",
+    badge: { icon: Trophy, label: "Premium", color: "bg-purple-100 text-purple-800" },
+    timeline: "2-4 months",
   },
   {
     icon: Palette,
@@ -73,7 +82,8 @@ const services = [
       "Styling and staging",
       "Final touches and details",
     ],
-    price: "From ₦300,000",
+    badge: { icon: Star, label: "Creative", color: "bg-indigo-100 text-indigo-800" },
+    timeline: "1-3 weeks",
   },
   {
     icon: Hammer,
@@ -88,7 +98,8 @@ const services = [
       "Quality materials",
       "Precision installation",
     ],
-    price: "From ₦150,000",
+    badge: { icon: Zap, label: "Express", color: "bg-emerald-100 text-emerald-800" },
+    timeline: "1-2 weeks",
   },
   {
     icon: Sparkles,
@@ -103,7 +114,8 @@ const services = [
       "Luxury finishes",
       "Exclusive materials",
     ],
-    price: "Quote on request",
+    badge: { icon: Gem, label: "Exclusive", color: "bg-cyan-100 text-cyan-800" },
+    timeline: "4-8 weeks",
   },
 ];
 
@@ -142,10 +154,16 @@ export default function ServicesPage() {
                     <div className="bg-brand-green/10 w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0">
                       <service.icon className="h-8 w-8 text-brand-green" />
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-semibold text-brand-blue mb-2">
-                        {service.title}
-                      </h3>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-2xl font-semibold text-brand-blue">
+                          {service.title}
+                        </h3>
+                        <div className={`px-3 py-1 rounded-full text-xs font-medium ${service.badge.color} flex items-center space-x-1`}>
+                          <service.badge.icon className="h-3 w-3" />
+                          <span>{service.badge.label}</span>
+                        </div>
+                      </div>
                       <p className="text-brand-gray">{service.description}</p>
                     </div>
                   </div>
@@ -163,10 +181,9 @@ export default function ServicesPage() {
                   </div>
 
                   <div className="flex justify-between items-center pt-6 border-t border-gray-200">
-                    <div>
-                      <span className="text-2xl font-bold text-brand-blue">
-                        {service.price}
-                      </span>
+                    <div className="flex items-center space-x-2 text-brand-gray">
+                      <Clock className="h-4 w-4" />
+                      <span className="text-sm font-medium">{service.timeline}</span>
                     </div>
                     <Button className="bg-brand-green hover:bg-brand-green/90">
                       <Link

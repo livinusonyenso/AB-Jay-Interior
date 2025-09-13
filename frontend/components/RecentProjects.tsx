@@ -286,8 +286,8 @@ export default function RecentProjects() {
                       {project.title}
                     </h3>
                     <div className="flex items-center text-gray-600 mb-4">
-                      <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
-                      <span className="text-sm">{project.location}</span>
+                      {/* <MapPin className="w-4 h-4 mr-2 flex-shrink-0" /> */}
+                      {/* <span className="text-sm">{project.location}</span> */}
                     </div>
 
                     {/* Progress Bar Animation */}

@@ -67,7 +67,7 @@ export default function ProjectHighlights() {
                     {project.title}
                   </h3>
                   <span className="text-sm text-brand-green font-medium">
-                    {project.location}
+                    {/* {project.location} */}
                   </span>
                 </div>
                 <p className="text-brand-gray">{project.description}</p>
