@@ -10,13 +10,13 @@ const services = [
   {
     title: "Commercial Spaces",
     description: "Create inspiring work environments",
-    image: "https://res.cloudinary.com/dike9pceb/image/upload/v1757672704/pexels-vardarious-3887985_krlawu.jpg",
+    image: "https://res.cloudinary.com/dike9pceb/image/upload/v1757875042/nick-karvounis-YH7KYtYMET0-unsplash_ktnnyz.jpg",
     features: ["Office Design", "Retail Spaces", "Hospitality"],
   },
   {
     title: "Full Renovations",
     description: "Complete transformation from concept to completion",
-    image: "https://res.cloudinary.com/dike9pceb/image/upload/v1757673028/the-prototype-FP7Fvx6Ni-A-unsplash_wmhqfm.jpg",
+    image: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823442/IMG-20230917-WA0003_juweru.jpg",
     features: ["Project Management", "Construction Oversight", "Final Styling"],
   },
 ]
