@@ -93,7 +93,7 @@ const onSubmitForm = async (data: ProjectFormData) => {
     }
 
     const result = project
-      ? await updateProject(project.id, formData, filesToUpload)
+      ? await updateProject(project._id, formData, filesToUpload)
       : await createProject(formData, filesToUpload)
 
     // Refresh the projects list to show the new/updated project

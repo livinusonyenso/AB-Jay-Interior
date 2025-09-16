@@ -67,15 +67,15 @@ export const ProjectsPage: React.FC = () => {
         </div>
       ) : (
         <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={project.id || index}
-              project={project}
-              onEdit={() => openEditModal(project)}
-              onDelete={() => handleDeleteProject(project.id)}
-              viewMode={viewMode}
-            />
-          ))}
+         {projects.map((project, index) => (
+  <ProjectCard
+    key={project._id || index}
+    project={project}
+    onEdit={() => openEditModal(project)}
+    onDelete={() => handleDeleteProject(project._id)}
+    viewMode={viewMode}
+  />
+))}
         </div>
       )}
 
@@ -90,7 +90,7 @@ export const ProjectsPage: React.FC = () => {
           onSuccess={(savedProject) => {
             // Refresh projects list automatically (assumes useProjects refetches)
             if (editingProject) {
-              updateProject(savedProject.id, savedProject); // Update locally if needed
+              updateProject(savedProject._id, savedProject); // Update locally if needed
             } else {
               createProject(savedProject); // Add new locally if needed
             }

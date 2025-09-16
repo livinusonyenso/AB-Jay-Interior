@@ -1,7 +1,6 @@
 import  { useState, useEffect } from "react";
 import {
   ArrowRight,
-  MapPin,
   Tag,
   X,
   ChevronLeft,
@@ -470,8 +469,8 @@ export default function RecentProjects() {
                   </h3>
 
                   <div className="flex items-center text-gray-600 mb-4">
-                    <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
-                    <span className="text-sm">{selectedProject.location}</span>
+                    {/* <MapPin className="w-4 h-4 mr-2 flex-shrink-0" /> */}
+                    {/* <span className="text-sm">{selectedProject.location}</span> */}
                   </div>
 
                   <p className="text-gray-700 text-sm leading-relaxed mb-6">

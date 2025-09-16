@@ -33,13 +33,13 @@ export const useProjects = () => {
 
   const updateProject = async (id: string, data: ProjectFormData, files?: File[]) => {
     const res = await projectsAPI.update(id, data, files)
-    setProjects((prev) => prev.map((p) => (p.id === id ? res.project : p)))
+    setProjects((prev) => prev.map((p) => (p._id === id ? res.project : p)))
     return res
   }
 
   const deleteProject = async (id: string) => {
     await projectsAPI.delete(id)
-    setProjects((prev) => prev.filter((p) => p.id !== id))
+    setProjects((prev) => prev.filter((p) => p._id !== id))
   }
 
   useEffect(() => {

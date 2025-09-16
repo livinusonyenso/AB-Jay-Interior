@@ -6,30 +6,30 @@ const projects = [
   {
     title: "Modern Living Room Makeover",
     location: "Lagos, Nigeria",
-    image: "/images/ab-jay-interior1.jpg?height=300&width=400",
-    description:
-      "Complete transformation of a family living space with contemporary furniture and smart lighting.",
+    image: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800",
+    description: "Complete transformation of a family living space with contemporary furniture and smart lighting.",
+    category: "Residential"
   },
   {
     title: "Executive Office Design",
-    location: "London, UK",
-    image: "/images/ab-jay-interior2.jpg?height=300&width=400",
-    description:
-      "Professional office setup with ergonomic design and brand-aligned aesthetics.",
+    location: "London, UK", 
+    image: "https://images.pexels.com/photos/6794934/pexels-photo-6794934.jpeg",
+    description: "Professional office setup with ergonomic design and brand-aligned aesthetics.",
+    category: "Commercial"
   },
   {
     title: "Luxury Bedroom Suite",
     location: "Abuja, Nigeria",
-    image: "/images/ab-jay-interior7.jpg?height=300&width=400",
-    description:
-      "Elegant bedroom design featuring custom furniture and premium finishes.",
+    image: "https://images.pexels.com/photos/1743229/pexels-photo-1743229.jpeg?auto=compress&cs=tinysrgb&w=800",
+    description: "Elegant bedroom design featuring custom furniture and premium finishes.",
+    category: "Residential"
   },
   {
     title: "Restaurant Interior",
     location: "Manchester, UK",
-    image: "/images/ab-jay-interior4.jpg?height=300&width=400",
-    description:
-      "Stylish restaurant interior designed to enhance dining experience and brand identity.",
+    image: "https://images.pexels.com/photos/67468/pexels-photo-67468.jpeg?auto=compress&cs=tinysrgb&w=800",
+    description: "Stylish restaurant interior designed to enhance dining experience and brand identity.",
+    category: "Hospitality"
   },
 ];
 

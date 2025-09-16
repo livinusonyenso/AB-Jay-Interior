@@ -43,7 +43,7 @@ export const CreateProject: React.FC = () => {
             project={editingProject}
             onSuccess={(savedProject) => {
               if (editingProject) {
-                updateProject(savedProject.id, savedProject);
+                updateProject(savedProject._id, savedProject);
               } else {
                 createProject(savedProject);
               }

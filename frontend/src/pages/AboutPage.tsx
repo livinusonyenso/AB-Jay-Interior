@@ -3,6 +3,8 @@ import Footer from "../../components/footer"
 import CertificationsSection from "../../components/certifications-section"
 import { Card, CardContent } from "../../components/ui/card"
 import { Users, Target, Heart, Award } from "lucide-react"
+import {CelebrityGallery} from "../../components/CelebrityGallery"
+import {ProjectShowcase} from "../../components/ProjectStages"
 
 const values = [
   {
@@ -30,6 +32,46 @@ const values = [
       "A diverse team of experienced designers, craftsmen, and project managers dedicated to bringing your vision to life with precision and style.",
   },
 ]
+
+const celebrities = [
+  { id: 1, name: "Celebrity One", imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823442/IMG-20230520-WA0001_lkj1xn.jpg" },
+  { id: 2, name: "Celebrity Two", imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823441/IMG-20230517-WA0007_rtcwtm.jpg" },
+  { id: 3, name: "Celebrity Three", imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823440/FB_IMG_16802895786503044_bmm7zy.jpg" },
+  { id: 4, name: "Celebrity Four", imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823441/IMG-20230519-WA0001_idaxn5.jpg" },
+];
+
+const projectImages = [
+  {
+    id: 1,
+    title: "Foundation Work",
+    imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757188771/portfolio/projects/1757188918516-2-ab-jay-interior20.jpg.jpg",
+  },
+  {
+    id: 2,
+    title: "Steel Framework",
+    imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823429/1698222676473_cnqhvx.jpg",
+  },
+  {
+    id: 3,
+    title: "Concrete Pouring",
+    imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823439/1705038065467_bq8eb6.jpg",
+  },
+  {
+    id: 4,
+    title: "Roof Installation",
+    imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823441/FB_IMG_16844397644125807_bc1ibz.jpg",
+  },
+  {
+    id: 5,
+    title: "Roof Installation",
+    imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823517/IMG-20231101-WA0012_lk6g1b.jpg",
+  },
+  {
+    id: 6,
+    title: "Roof Installation",
+    imageUrl: "https://res.cloudinary.com/dike9pceb/image/upload/v1757823591/IMG-20240731-WA0018_ysj1yy.jpg",
+  },
+];
 
 export default function AboutPage() {
   return (
@@ -94,6 +136,9 @@ export default function AboutPage() {
 
       {/* Add Team Section */}
       {/* <TeamSection /> */}
+<CelebrityGallery celebrities={celebrities}/>
+
+<ProjectShowcase images={projectImages}/>
 
       {/* Mission, Vision, Values - keep existing */}
       <section className="py-20 bg-gray-50">

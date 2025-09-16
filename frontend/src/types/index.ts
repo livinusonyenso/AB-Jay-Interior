@@ -14,7 +14,7 @@ export interface AuthContextType {
 }
 
 export interface Project {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   category: string;
