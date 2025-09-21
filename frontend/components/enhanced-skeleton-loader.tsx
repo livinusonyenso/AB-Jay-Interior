@@ -15,7 +15,7 @@ export const EnhancedSkeletonLoader: React.FC<EnhancedSkeletonLoaderProps> = ({
   width = "100%",
   height = "100%",
   lines = 1,
-  waveHeight = 4,
+//   waveHeight = 4,
 }) => {
   const baseClasses = "relative overflow-hidden bg-gray-200 dark:bg-gray-800"
 
