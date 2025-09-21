@@ -1,5 +1,9 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import { Button } from "./Button"
+import { FacebookStyleHeroSkeleton } from "./enhanced-skeleton-loader"
+import { Link } from "react-router-dom"
 
 const heroImages = [
   {
@@ -21,22 +25,23 @@ const heroImages = [
     category: "Kitchen",
   },
   {
-    url: "https://res.cloudinary.com/dike9pceb/image/upload/v1757670977/pexels-heyho-6207943_xhyos2.jpg", // replace with actual image
+    url: "https://res.cloudinary.com/dike9pceb/image/upload/v1757670977/pexels-heyho-6207943_xhyos2.jpg",
     title: "Spa-Inspired Bathrooms",
     subtitle: "Bathrooms designed for relaxation and elegance",
     category: "Bathroom",
   },
   {
-    url: "https://res.cloudinary.com/dike9pceb/image/upload/v1757670965/vinicius-araujo-uBbpXj1fTao-unsplash_g0hry0.jpg", // replace with actual image
+    url: "https://res.cloudinary.com/dike9pceb/image/upload/v1757670965/vinicius-araujo-uBbpXj1fTao-unsplash_g0hry0.jpg",
     title: "Elegant Dining & Entertainment",
     subtitle: "Spaces crafted for unforgettable gatherings",
     category: "Dining & Entertainment",
   },
-];
-
+]
 
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set())
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -45,8 +50,42 @@ export function HeroSection() {
     return () => clearInterval(timer)
   }, [])
 
+  // Preload all images
+  useEffect(() => {
+    const preloadImages = () => {
+      heroImages.forEach((image, index) => {
+        const img = new Image()
+        img.onload = () => {
+          setLoadedImages((prev) => new Set([...prev, index]))
+        }
+        img.onerror = () => {
+          console.warn(`Failed to load image: ${image.url}`)
+        }
+        img.src = image.url
+      })
+    }
+
+    preloadImages()
+  }, [])
+
+  // Check if current slide image is loaded
+  useEffect(() => {
+    if (loadedImages.has(currentSlide)) {
+      setIsLoading(false)
+    } else {
+      setIsLoading(true)
+    }
+  }, [currentSlide, loadedImages])
+
+  const handleImageLoad = () => {
+    setLoadedImages((prev) => new Set([...prev, currentSlide]))
+    setIsLoading(false)
+  }
+
   return (
     <section className="relative h-screen overflow-hidden">
+      {isLoading && !loadedImages.has(currentSlide) && <FacebookStyleHeroSkeleton />}
+
       {heroImages.map((image, index) => (
         <div
           key={index}
@@ -54,7 +93,13 @@ export function HeroSection() {
             index === currentSlide ? "opacity-100" : "opacity-0"
           }`}
         >
-          <img src={image.url || "/placeholder.svg"} alt={image.title} className="w-full h-full object-cover" />
+          <img
+            src={image.url || "/placeholder.svg"}
+            alt={image.title}
+            className="w-full h-full object-cover"
+            onLoad={index === currentSlide ? handleImageLoad : undefined}
+            loading={index === 0 ? "eager" : "lazy"}
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
         </div>
       ))}
@@ -68,19 +113,13 @@ export function HeroSection() {
             {heroImages[currentSlide].subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Button 
-              size="lg" 
-              variant="primary"
-              className="min-w-[200px] shadow-2xl"
-            >
-              View Our Portfolio
+            <Button size="lg" variant="primary" className="min-w-[200px] shadow-2xl">
+              
+                           <Link to={"/gallery"} > View Our Portfolio</Link>
+
             </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="min-w-[200px] shadow-2xl"
-            >
-              Schedule Consultation
+            <Button size="lg" variant="outline" className="min-w-[200px] shadow-2xl bg-transparent">
+             <Link to={"/requestQuote"} > Schedule Consultation</Link>
             </Button>
           </div>
         </div>
@@ -93,8 +132,8 @@ export function HeroSection() {
             key={index}
             onClick={() => setCurrentSlide(index)}
             className={`w-4 h-4 rounded-full transition-all duration-300 ${
-              index === currentSlide 
-                ? "bg-gradient-to-r from-blue-400 to-green-400 shadow-lg scale-125" 
+              index === currentSlide
+                ? "bg-gradient-to-r from-blue-400 to-green-400 shadow-lg scale-125"
                 : "bg-white/40 hover:bg-white/60 backdrop-blur-sm"
             }`}
           />
