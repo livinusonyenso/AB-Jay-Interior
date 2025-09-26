@@ -20,7 +20,7 @@ export default function Navbar() {
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
       {/* Top bar */}
-      <div className="bg-brand-blue text-white py-2">
+      {/* <div className="bg-brand-blue text-white py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">
@@ -36,7 +36,7 @@ export default function Navbar() {
             <span>Serving Nigeria & UK</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main navbar */}
       <div className="container mx-auto px-4">
@@ -47,7 +47,8 @@ export default function Navbar() {
   <img 
     src="https://res.cloudinary.com/dike9pceb/image/upload/v1757272579/slazzer_img_1744622557797_abhqep.png" 
     alt="Company Logo" 
-    className="h-8 w-12 object-contain scale-150"
+    className="h-8 w-12 object-contain scale-250"
+    
   />
 </div>
 
